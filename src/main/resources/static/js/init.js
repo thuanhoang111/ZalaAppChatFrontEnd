@@ -9,18 +9,19 @@ let userAvatarTemporary = "";
 // let urlMessageImg = ""
 // let urlAvatarFile = "";
 const firebaseConfig = {
-  apiKey: "AIzaSyAdHX9EhKek9C_AFjT0gSAaChjpype9Oi0",
-  authDomain: "appchatzala.firebaseapp.com",
-  projectId: "appchatzala",
-  storageBucket: "appchatzala.appspot.com",
-  messagingSenderId: "1073900432056",
-  appId: "1:1073900432056:web:a42ae72d589957cce1e24d",
+  apiKey: "AIzaSyB0FKXbSt_rK7wRNtlz0opywxtoGYFmtLg",
+  authDomain: "zala-d8638.firebaseapp.com",
+  projectId: "zala-d8638",
+  storageBucket: "zala-d8638.appspot.com",
+  messagingSenderId: "535358142860",
+  appId: "1:535358142860:web:546bc106e7a66b68b3fea9",
+  measurementId: "G-V6JFR21WZC"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 // Initialize Cloud Storage and get a reference to the service
-const storage = getStorage(app, "gs://appchatzala.appspot.com");
+const storage = getStorage(app, "gs://zala-d8638.appspot.com");
 $(document).ready(function () {
   $("#inputImg").on("change", (input) => {
     const file = input.target.files[0];

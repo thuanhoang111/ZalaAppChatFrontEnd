@@ -121,6 +121,7 @@ $(document).ready(function () {
 
           $("#listContact").append(htmlContacts);
           $("#contactsCreateGroup").append(htmlContactsCreateGroup);
+          $("#contactsCreateGroup123").append(htmlContactsCreateGroup);
           // $("#user-status-carousel").append(htmlContactsChat);
         },
         error: function (textStatus, errorThrown) {
@@ -937,3 +938,34 @@ function scrollToBottomMessages() {
   );
   container.scrollTo({ top: 10000, behavior: "smooth" });
 }
+
+
+
+
+
+$(function () {
+  $('#btnAddFriendInGroupChat').on('click', function () {
+      // console.log(conversationSelected.id);
+      let idUser=  $("input:checkbox[name=contacts]:checked").val();     
+
+  const data= {
+          "userId":idUser,
+          "conversationId":conversationSelected.id
+      }
+      console.log(data);
+      $.ajax({
+          url: `${api}/conversations/addMemberInGroup`,
+          type: "POST",
+          data: JSON.stringify(data),
+          async: true,
+          beforeSend: function (xhr) {
+              xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+              xhr.setRequestHeader("Accept", "application/json");
+              xhr.setRequestHeader("Content-Type", "application/json");
+          },
+          success: function (result) {
+              alert("Thành công");
+//location.reload(); 
+          }     
+      });
+    })});

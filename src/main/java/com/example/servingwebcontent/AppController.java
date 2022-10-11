@@ -15,4 +15,8 @@ public class AppController {
 	public String viewLogin() {
 		return "Login";
 	}
+	@GetMapping("/register")
+	public String viewRegister() {
+		return "Register";
+	}
 }
