@@ -121,7 +121,7 @@ $(document).ready(function () {
 
           $("#listContact").append(htmlContacts);
           $("#contactsCreateGroup").append(htmlContactsCreateGroup);
-          $("#contactsCreateGroup123").append(htmlContactsCreateGroup);
+          // $("#contactsCreateGroup123").append(htmlContactsCreateGroup);
           // $("#user-status-carousel").append(htmlContactsChat);
         },
         error: function (textStatus, errorThrown) {
@@ -1103,8 +1103,125 @@ $(function () {
       },
       success: function (result) {
         alert("Thành công");
+        window.location.reload();
         //location.reload();
       },
     });
   });
 });
+function getLeaveConversation() {
+  const getUser = localStorage.getItem("userId");
+  var name;
+  // console.log(getUser)
+  //console.log(conversationSelected.id)
+  $.ajax({
+    url: `${api}/members/${conversationSelected.id}`,
+    type: "GET",
+    async: true,
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+      xhr.setRequestHeader("Accept", "application/json");
+      xhr.setRequestHeader("Content-Type", "application/json");
+    },
+    success: function (result) {
+      user = result;
+      console.log(user);
+      user.map((userhe) => {
+        if (userhe.userId == getUser) {
+          name = userhe.id;
+        }
+      });
+      let body = {
+        userId: getUser,
+        conversationId: conversationSelected.id,
+        memberId: name,
+      };
+      console.log(body);
+
+      $.ajax({
+        url: `${api}/conversations/leaveConversation`,
+        type: "POST",
+        data: JSON.stringify(body),
+        async: true,
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+          xhr.setRequestHeader("Accept", "application/json");
+          xhr.setRequestHeader("Content-Type", "application/json");
+        },
+        success: function (result) {
+          alert("Rời nhóm thành công");
+          window.location.reload();
+        },
+      });
+    },
+  });
+}
+function handleFindMemberByName() {
+  let htmlContacts = "";
+  let name = document.getElementById("searchNameFriend").value;
+  $.ajax({
+    url: `${api}/contacts/user/${localStorage.getItem("userId")}`,
+    type: "GET",
+    async: true,
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+      xhr.setRequestHeader("Accept", "application/json");
+      xhr.setRequestHeader("Content-Type", "application/json");
+    },
+    success: function (result) {
+      users = result;
+      console.log(users);
+      users.map((user) => {
+        if (user.nameFriend == name) {
+          htmlContacts = `
+                              <li>
+                                  <div class="form-check">
+                                      <input type="checkbox" name="contacts" value="${user.friendId}" class="form-check-input" id="contact_${user.friendId}" checked>
+                                      <label class="form-check-label" for="memberCheck1">${user.nameFriend}</label>
+                                  </div>
+                              </li>
+                              
+                              `;
+        }
+      });
+
+      $("#contactsCreateGroup123").append(htmlContacts);
+    },
+  });
+}
+
+function handleHideShowButtonAddFriend() {
+  console.log(conversationSelected.id);
+  $.ajax({
+    url: `${api}/conversations/user/${localStorage.getItem("userId")}`,
+    type: "GET",
+    async: true,
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+      xhr.setRequestHeader("Accept", "application/json");
+      xhr.setRequestHeader("Content-Type", "application/json");
+    },
+    success: function (result) {
+      console.log(result);
+      result.map((conversation) => {
+        if (conversation.id == conversationSelected.id) {
+          //   if(conversation.typeChat==false){
+          //     $('#addFriendGroup').css('display', 'none');
+          //     console.log("kq sai")
+          //     // $("#elemen").hidden = truet_to_hide
+          //   }
+          // }
+          // if(conversation.id==conversationSelected.id){
+          //   if(conversation.typeChat==true){
+          //     $('#addFriendGroup').show()
+          //     console.log("kq dung")
+          //     // $("#elemen").hidden = truet_to_hide
+          //   }
+          conversation.typeChat == false
+            ? $("#addFriendGroup").css("display", "none")
+            : $("#addFriendGroup").show();
+        }
+      });
+    },
+  });
+}

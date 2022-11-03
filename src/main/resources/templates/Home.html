@@ -281,7 +281,7 @@
                                         <h5 class="font-size-13 text-truncate mt-3 mb-1">Patrick</h5>
                                     </a>
                                 </div> -->
-                                <div class="item">
+                                <!-- <div class="item">
                                     <a href="#" class="user-status-box">
                                         <div class="avatar-xs mx-auto d-block chat-user-img online">
                                             <img src="assets/images/users/avatar-4.jpg" alt="user-img"
@@ -328,7 +328,7 @@
 
                                         <h5 class="font-size-13 text-truncate mt-3 mb-1">Teresa</h5>
                                     </a>
-                                </div>
+                                </div> -->
 
                             </div>
                             <!-- end user status carousel -->
@@ -1110,13 +1110,14 @@
                                             </button>
                                     </li> -->
 
-                                    <li class="list-inline-item d-none d-lg-inline-block me-2 ms-0">
-                                        <button type="button" class="btn nav-btn user-profile-show">
+                                    <li class="list-inline-item">
+                                        <button onclick="return handleHideShowButtonAddFriend();" type="button"
+                                            class="btn nav-btn user-profile-show">
                                             <i class="far fa-user"></i>
                                         </button>
                                     </li>
 
-                                    <li class="list-inline-item">
+                                    <!-- <li class="list-inline-item">
                                         <div class="dropdown">
                                             <button class="btn nav-btn dropdown-toggle" type="button"
                                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -1140,7 +1141,7 @@
                                                         class="ri-delete-bin-line float-end text-muted"></i></a>
                                             </div>
                                         </div>
-                                    </li>
+                                    </li> -->
                                 </ul>
                             </div>
                         </div>
@@ -1601,12 +1602,16 @@
                         <!-- <p class="text-muted text-truncate mb-1"><i
                                 class="ri-record-circle-fill font-size-10 text-success me-1 ms-0"></i> Active</p> -->
                         <!-- NHH: handle modal -->
-                        <p class="text-muted text-truncate mb-1"><button type="button"
-                                class="btn nav-btn user-profile-show" data-bs-toggle="modal"
-                                data-bs-target="#addFriendInGroup-Modal">
-                                <i class="far fa-user"></i>
-                            </button>
-                        </p>
+
+                        <div>
+                            <p class="text-muted text-truncate mb-1">
+                                <button id="addFriendGroup" type="button" class="btn nav-btn user-profile-show"
+                                    data-bs-toggle="modal" data-bs-target="#addFriendInGroup-Modal">
+                                    <!-- onclick="return getListFriendNoInConversation();" -->
+                                    <i class="fas fa-solid fa-user-plus"></i>
+                                </button>
+                            </p>
+                        </div>
 
                         <!-- Start add group Modal -->
                         <div class="modal fade" id="addFriendInGroup-Modal" tabindex="-1" role="dialog"
@@ -1614,8 +1619,8 @@
                             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title font-size-16" id="addgroup-exampleModalLabel">Create New
-                                            Group</h5>
+                                        <h5 class="modal-title font-size-16" id="addgroup-exampleModalLabel">Thêm vào
+                                            nhóm</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close">
                                         </button>
@@ -1623,43 +1628,51 @@
                                     <div class="modal-body p-4">
                                         <form>
                                             <div class="mb-4">
-                                                <label for="addgroupname-input" class="form-label">Group Name</label>
-                                                <input type="text" class="form-control" id="addGroupnameInput"
-                                                    placeholder="Enter Group Name">
+                                                <!-- <label for="addgroupname-input" class="form-label">Nhập tên cần tìm</label> -->
+                                                <input type="text" class="form-control" id="searchNameFriend"
+                                                    placeholder="Nhập tên cần tìm">
+                                                <button onclick="return handleFindMemberByName();"
+                                                    class="btn btn-success" style="width: 100%;text-align: center;">Tìm
+                                                    kiếm</button>
                                             </div>
                                             <div class="mb-4">
-                                                <label class="form-label">Group Members</label>
-                                                <div class="mb-3">
-                                                    <button class="btn btn-light btn-sm" type="button"
-                                                        data-bs-toggle="collapse" data-bs-target="#groupmembercollapse"
-                                                        aria-expanded="false" aria-controls="groupmembercollapse">
-                                                        Select Members
-                                                    </button>
+                                                <ul id="contactsCreateGroup123" class="list-unstyled contact-list">
+                                                    <!-- <li>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="memberCheck1" checked>
+                                                    <label class="form-check-label" for="memberCheck1">Albert Rodarte</label>
                                                 </div>
-
-                                                <div class="collapse" id="groupmembercollapse">
-                                                    <div class="card border">
-                                                        <div class="card-header">
-                                                            <h5 class="font-size-15 mb-0">Contacts</h5>
-                                                        </div>
-                                                        <div class="card-body p-2">
-                                                            <div data-simplebar style="max-height: 150px;">
-                                                                <div>
-                                                                    <ul id="contactsCreateGroup123"
-                                                                        class="list-unstyled contact-list">
-                                                                        <!-- <li>
+                                            </li> -->
+                                                </ul>
+                                                <!-- <label class="form-label">Group Members</label>
+                                        <div class="mb-3">
+                                            <button class="btn btn-light btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#groupmembercollapse" aria-expanded="false" aria-controls="groupmembercollapse">
+                                                    Select Members
+                                                </button>
+                                        </div>
+                                            s-->
+                                                <!-- <div class="collapse" id="groupmembercollapse">
+                                            <div class="card border"> 
+                                                <div class="card-header">
+                                                    <h5 class="font-size-15 mb-0">Contacts</h5>
+                                                    </div>
+                                                <div class="card-body p-2">
+                                                    <div data-simplebar style="max-height: 150px;">
+                                                        <div>
+                                                            <ul id="contactsCreateGroup123" class="list-unstyled contact-list">
+                                                                <li>
                                                                     <div class="form-check">
                                                                         <input type="checkbox" class="form-check-input" id="memberCheck1" checked>
                                                                         <label class="form-check-label" for="memberCheck1">Albert Rodarte</label>
                                                                     </div>
-                                                                </li> -->
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
+                                                                </li>
+                                                            </ul>
                                                         </div>
-
                                                     </div>
                                                 </div>
+
+                                            </div>
+                                        </div> -->
                                             </div>
                                         </form>
                                     </div>
@@ -1673,6 +1686,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <!-- End add group Modal -->
 
                         <!-- NHH: handle modal -->
@@ -1725,7 +1739,12 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="d-flex justify-content-center">
+                                <div class="text-start ">
+                                    <button type="button" onclick="return getLeaveConversation();"
+                                        class="btn btn-primary">Rời nhóm</button>
+                                </div>
+                            </div>
                             <!-- <div class="accordion-item card border">
                                 <div class="accordion-header" id="attachfile3">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#attachprofile" aria-expanded="false" aria-controls="attachprofile">

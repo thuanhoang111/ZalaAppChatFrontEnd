@@ -141,7 +141,25 @@ const handleAcceptAddFriend = (friendId, nameFriend, requestId) => {
     },
   });
 };
-
+const handleDeleteAddFriend = (notifycationId) => {
+  console.log(notifycationId);
+  // http://localhost:8080/notifycation/deleteFriendRequest/MfLLwnbKYVzziTG8Fxy3
+  $.ajax({
+    url: `${api}/notifycation/deleteFriendRequest/${notifycationId}`,
+    type: "DELETE",
+    async: true,
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+      xhr.setRequestHeader("Accept", "application/json");
+      xhr.setRequestHeader("Content-Type", "application/json");
+    },
+    success: function (result) {
+      $("#123").remove();
+      alert("thanhcong");
+      // window.location.reload();
+    },
+  });
+};
 const handleRequestAddFriend = () => {
   const phoneNumber = $("#inputFindUserByPhoneNumber").val();
   if (phoneNumber && phoneNumber !== "") {

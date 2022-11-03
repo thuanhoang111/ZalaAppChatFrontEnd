@@ -19,4 +19,8 @@ public class AppController {
 	public String viewRegister() {
 		return "Register";
 	}
+	@GetMapping("/forgotPassword")
+	public String forgotPassword() {
+		return "ForgotPassword";
+	}
 }
