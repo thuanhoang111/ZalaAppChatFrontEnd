@@ -9,7 +9,7 @@ let conversationSelected;
 let myMemberInConversationSelected;
 let membersInGroup = [];
 let avatarInConversationSelected;
-
+let urlListImage = "";
 //socket
 let stompClient;
 
@@ -545,19 +545,95 @@ const handleSelectConversation = async (conversationId) => {
                     <div class="inline-block bg-blue-600 rounded-full p-2 px-6 text-white">
                       <span>${message.content}</span>
                     </div>
+                    <div class="pl-4"><small class="text-gray-500">${formatDate(
+                      message.createAt
+                    )}</small></div>
                     `;
                   } else {
                     showContent += `<div class="inline-block bg-gray-300 rounded-full p-2 px-6 text-gray-700">
                                       <span>${message.content}</span>
-                                    </div>`;
+                                    </div>
+                                    <div class="pl-4"><small class="text-gray-500">${formatDate(
+                                      message.createAt
+                                    )}</small></div>`;
                   }
+                } else if (message.type === "listImage") {
+                  let flexDirection = "";
+                  let alignItem = "";
+                  if (message.sender === myMemberInConversationSelected.id) {
+                    flexDirection = `flex-direction: row-reverse;`;
+                    alignItem = "align-items: flex-end;";
+                  }
+
+                  const listImage = message.content.split("+");
+                  console.log(listImage);
+                  let listImageRender = "";
+
+                  listImage.forEach((itemImage) => {
+                    listImageRender += `<div>
+                      <a class="popup-img d-inline-block m-1"
+                          href="${itemImage}"
+                          title="Project 1">
+                          <img src="${itemImage}"
+                              alt="" class="rounded border"
+                              style="width:150px;height:100px">
+                      </a>
+                  </div>`;
+                  });
+                  showContent += `<div class="ctext-wrap-content">
+                                      <ul class="list-inline message-img  mb-0 " style="
+                                      display: flex;
+                                      flex-direction: column;
+                                      width: 100%;
+                                      ${alignItem}
+                                      ">
+                                          <li class="list-inline-item message-img-list me-2 ms-0 "
+                                              style="display: flex;flex-wrap: wrap;width:51%; ${flexDirection}">
+                                                ${listImageRender}
+                                          </li>
+
+                                          <div class="message-img-link">
+                                              <ul class="list-inline mb-0">
+                                                  <li class="list-inline-item">
+                                                      <a href="#">
+                                                          <i class="ri-download-2-line"></i>
+                                                      </a>
+                                                  </li>
+                                                  <li class="list-inline-item dropdown">
+                                                      <a class="dropdown-toggle" href="#" role="button"
+                                                          data-bs-toggle="dropdown" aria-haspopup="true"
+                                                          aria-expanded="false">
+                                                          <i class="ri-more-fill"></i>
+                                                      </a>
+                                                      <div class="dropdown-menu">
+                                                          <a class="dropdown-item" href="#">Copy <i
+                                                                  class="ri-file-copy-line float-end text-muted"></i></a>
+                                                          <a class="dropdown-item" href="#">Save <i
+                                                                  class="ri-save-line float-end text-muted"></i></a>
+                                                          <a class="dropdown-item" href="#">Forward <i
+                                                                  class="ri-chat-forward-line float-end text-muted"></i></a>
+                                                          <a class="dropdown-item" href="#">Delete <i
+                                                                  class="ri-delete-bin-line float-end text-muted"></i></a>
+                                                      </div>
+                                                  </li>
+                                              </ul>
+                                          </div>
+                                          <div class="pr-4"><small class="text-gray-500">${formatDate(
+                                            new Date().toString()
+                                          )}</small></div>
+                                      </ul>
+                                  </div>`;
                 } else {
                   showContent += `<div class="ctext-wrap-content">
                   <ul class="list-inline message-img  mb-0">
                       <li class="list-inline-item message-img-list me-2 ms-0">
                           <div>
-                              <a class="popup-img d-inline-block m-1" href="${message.content}" title="Project 1">
-                                  <img src="${message.content}" alt="" class="rounded border" style=width:150px;height:100px>
+                              <a class="popup-img d-inline-block m-1" href="${
+                                message.content
+                              }" title="Project 1">
+                                  <img src="${
+                                    message.content
+                                  }" alt="" class="rounded border" style=width:150px;height:100px>
                               </a>
                           </div>
                           <div class="message-img-link">
@@ -584,7 +660,10 @@ const handleSelectConversation = async (conversationId) => {
               
               
                   </ul>
-              </div>`;
+              </div>
+              <div class="pl-4"><small class="text-gray-500">${formatDate(
+                message.createAt
+              )}</small></div>`;
                 }
 
                 if (message.sender === myMemberInConversationSelected.id) {
@@ -594,9 +673,6 @@ const handleSelectConversation = async (conversationId) => {
                           <div class="message me mb-4 flex text-right">
                               <div class="flex-1 px-2">
                                       ${showContent}
-                                  <div class="pr-4"><small class="text-gray-500">${formatDate(
-                                    message.createAt
-                                  )}</small></div>
                               </div>
                           </div>
                       `;
@@ -607,9 +683,7 @@ const handleSelectConversation = async (conversationId) => {
                       <div class="message mb-4 flex">
                           <div class="flex-2">
                               <div class="w-12 h-12 relative">
-                                  <img class="w-12 h-12 rounded-full mx-auto" src=${
-                                    message.avatarSender
-                                  } alt="chat-user" />
+                                  <img class="w-12 h-12 rounded-full mx-auto" src=${message.avatarSender} alt="chat-user" />
                                   <span class="absolute w-4 h-4 bg-gray-400 rounded-full right-0 bottom-0 border-2 border-white"></span>
                               </div>
                           </div>
@@ -618,9 +692,7 @@ const handleSelectConversation = async (conversationId) => {
                                   <p>${message.senderName}</p>
                               </div>
                                 ${showContent}
-                              <div class="pl-4"><small class="text-gray-500">${formatDate(
-                                message.createAt
-                              )}</small></div>
+                              
                           </div>
                       </div>
                     `;
@@ -814,8 +886,14 @@ const connectToChat = async (conversation) => {
           }
 
           $(`#notifyMessage_${message.conversationId}`).remove();
+
+          if (message.type === "text") {
+            notifyLastMessageHistory = message.content;
+          } else {
+            notifyLastMessageHistory = "đã gửi cho bạn hình ảnh ";
+          }
           let htmlMessageNotify = `
-                        <p id="notifyMessage_${message.conversationId}" class="chat-user-message mb-0">${message.senderName}: ${message.content}</p>
+                        <p id="notifyMessage_${message.conversationId}" class="chat-user-message mb-0">${message.senderName}: ${notifyLastMessageHistory}</p>
                     `;
           $(`#conversation_messageNotify_${message.conversationId}`).append(
             htmlMessageNotify
@@ -844,9 +922,9 @@ function sendMessage(member, type, content, conversation) {
   if (type === "image") {
     showContent += `<div class="ctext-wrap-content">
       <ul class="list-inline message-img  mb-0">
-          <li class="list-inline-item message-img-list me-2 ms-0">
+          <li class="list-inline-item message-img-list me-2 ms-0 w-50">
               <div>
-                  <a class="popup-img d-inline-block m-1" href="assets/images/small/img-1.jpg" title="Project 1">
+                  <a class="popup-img d-inline-block m-1" href="${content}" title="Project 1">
                       <img src="${content}" alt="" class="rounded border" style="width:150;height:100px">
                   </a>
               </div>
@@ -874,12 +952,79 @@ function sendMessage(member, type, content, conversation) {
 
 
       </ul>
+  </div>
+  <div class="pr-4"><small class="text-gray-500">${formatDate(
+    new Date().toString()
+  )}</small></div>`;
+  } else if (type === "listImage") {
+    const listImage = content.split("+");
+    console.log(listImage);
+    let listImageRender = "";
+
+    listImage.forEach((itemImage) => {
+      listImageRender += `<div>
+      <a class="popup-img d-inline-block m-1"
+          href="${itemImage}"
+          title="Project 1">
+          <img src="${itemImage}"
+              alt="" class="rounded border"
+              style="width:150px;height:100px">
+      </a>
   </div>`;
+    });
+    showContent += `<div class="ctext-wrap-content">
+    <ul class="list-inline message-img  mb-0 " style="
+    display: flex;
+    flex-direction: column;
+    float: right;
+    width: 100%;
+    ">
+        <li class="list-inline-item message-img-list me-2 ms-0 "
+            style="display: flex;flex-wrap: wrap;justify-content: flex-end;">
+              ${listImageRender}
+        </li>
+
+        <div class="message-img-link">
+            <ul class="list-inline mb-0">
+                <li class="list-inline-item">
+                    <a href="#">
+                        <i class="ri-download-2-line"></i>
+                    </a>
+                </li>
+                <li class="list-inline-item dropdown">
+                    <a class="dropdown-toggle" href="#" role="button"
+                        data-bs-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        <i class="ri-more-fill"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Copy <i
+                                class="ri-file-copy-line float-end text-muted"></i></a>
+                        <a class="dropdown-item" href="#">Save <i
+                                class="ri-save-line float-end text-muted"></i></a>
+                        <a class="dropdown-item" href="#">Forward <i
+                                class="ri-chat-forward-line float-end text-muted"></i></a>
+                        <a class="dropdown-item" href="#">Delete <i
+                                class="ri-delete-bin-line float-end text-muted"></i></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="pr-4"><small class="text-gray-500">${formatDate(
+          new Date().toString()
+        )}</small></div>
+    </ul>
+</div>`;
   } else {
     showContent += `
     <div class="inline-block bg-blue-600 rounded-full p-2 px-6 text-white">
     <span>${content}</span>
     </div>
+    <div class="pr-4"><small class="text-gray-500">${formatDate(
+      new Date().toString()
+    )}</small></div>
     `;
   }
 
@@ -887,9 +1032,6 @@ function sendMessage(member, type, content, conversation) {
         <div class="message me mb-4 flex text-right">
             <div class="flex-1 px-2">
                     ${showContent}
-                <div class="pr-4"><small class="text-gray-500">${formatDate(
-                  new Date().toString()
-                )}</small></div>
             </div>
         </div>
     `;
@@ -918,9 +1060,9 @@ const handleSendMessage = () => {
   );
 };
 
-$("#sendBtn").click(() => {
-  handleSendMessage();
-});
+// $("#sendBtn").click(() => {
+//   handleSendMessage();
+// });
 
 (() => {
   $("#message-to-send").on("keyup", addMessageEnter.bind(this));
@@ -936,36 +1078,33 @@ function scrollToBottomMessages() {
   var container = document.querySelector(
     "#divConversation .simplebar-content-wrapper"
   );
-  container.scrollTo({ top: 10000, behavior: "smooth" });
+  container.scrollTo({ top: 100000, behavior: "smooth" });
 }
 
-
-
-
-
 $(function () {
-  $('#btnAddFriendInGroupChat').on('click', function () {
-      // console.log(conversationSelected.id);
-      let idUser=  $("input:checkbox[name=contacts]:checked").val();     
+  $("#btnAddFriendInGroupChat").on("click", function () {
+    // console.log(conversationSelected.id);
+    let idUser = $("input:checkbox[name=contacts]:checked").val();
 
-  const data= {
-          "userId":idUser,
-          "conversationId":conversationSelected.id
-      }
-      console.log(data);
-      $.ajax({
-          url: `${api}/conversations/addMemberInGroup`,
-          type: "POST",
-          data: JSON.stringify(data),
-          async: true,
-          beforeSend: function (xhr) {
-              xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-              xhr.setRequestHeader("Accept", "application/json");
-              xhr.setRequestHeader("Content-Type", "application/json");
-          },
-          success: function (result) {
-              alert("Thành công");
-//location.reload(); 
-          }     
-      });
-    })});
+    const data = {
+      userId: idUser,
+      conversationId: conversationSelected.id,
+    };
+    console.log(data);
+    $.ajax({
+      url: `${api}/conversations/addMemberInGroup`,
+      type: "POST",
+      data: JSON.stringify(data),
+      async: true,
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+        xhr.setRequestHeader("Accept", "application/json");
+        xhr.setRequestHeader("Content-Type", "application/json");
+      },
+      success: function (result) {
+        alert("Thành công");
+        //location.reload();
+      },
+    });
+  });
+});

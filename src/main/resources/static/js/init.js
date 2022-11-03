@@ -6,65 +6,58 @@ import {
   uploadBytesResumable,
 } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-storage.js";
 let userAvatarTemporary = "";
-// let urlMessageImg = ""
-// let urlAvatarFile = "";
-const firebaseConfig = {
-  apiKey: "AIzaSyB0FKXbSt_rK7wRNtlz0opywxtoGYFmtLg",
-  authDomain: "zala-d8638.firebaseapp.com",
-  projectId: "zala-d8638",
-  storageBucket: "zala-d8638.appspot.com",
-  messagingSenderId: "535358142860",
-  appId: "1:535358142860:web:546bc106e7a66b68b3fea9",
-  measurementId: "G-V6JFR21WZC"
-};
 
+const firebaseConfig = {
+  apiKey: "AIzaSyAdHX9EhKek9C_AFjT0gSAaChjpype9Oi0",
+  authDomain: "appchatzala.firebaseapp.com",
+  projectId: "appchatzala",
+  storageBucket: "appchatzala.appspot.com",
+  messagingSenderId: "1073900432056",
+  appId: "1:1073900432056:web:a42ae72d589957cce1e24d",
+};
+import emoji from "../assets/images/emoji2.json" assert { type: "json" };
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 // Initialize Cloud Storage and get a reference to the service
-const storage = getStorage(app, "gs://zala-d8638.appspot.com");
+const storage = getStorage(app, "gs://appchatzala.appspot.com");
 $(document).ready(function () {
-  $("#inputImg").on("change", (input) => {
-    const file = input.target.files[0];
-    const storageRef = ref(storage, file.name);
-    const uploadTask = uploadBytesResumable(storageRef, file);
+  renderListEmoji(emoji);
+  $("#sendBtn").on("click", (input) => {
+    switch (filesArr.length) {
+      case 0:
+        handleSendMessage();
+        break;
+      case 1:
+        handleSendMessageImage(filesArr);
+        filesArr = [];
+        console.log(filesArr);
+        ClearElementChild("listImageSelectTemporary");
+        break;
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // Observe state change events such as progress, pause, and resume
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
-        switch (snapshot.state) {
-          case "paused":
-            console.log("Upload is paused");
-            break;
-          case "running":
-            console.log("Upload is running");
-            break;
-        }
-      },
-      (error) => {
-        // Handle unsuccessful uploads
-      },
-      () => {
-        // Handle successful uploads on complete
-        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+      default:
+        handleSendMessageListImage(filesArr);
+        const timeSendMessage = filesArr.length * 1000;
+        filesArr = [];
+        ClearElementChild("listImageSelectTemporary");
+        console.log(urlListImage);
+        setTimeout(() => {
           sendMessage(
             myMemberInConversationSelected,
-            "image",
-            downloadURL,
+            "listImage",
+            urlListImage,
             conversationSelected
           );
-        });
-      }
-    );
+        }, timeSendMessage);
+
+        urlListImage = "";
+
+        break;
+    }
   });
+
   $("#messageImg").on("change", (input) => {
-    handleSelectImage(input.target.files[0]);
+    const ImgTemporary = handleSelectImage(input.target.files[0]);
+    $("#userAvatar").prop("src", ImgTemporary);
     userAvatarTemporary = input.target.files[0];
   });
   $("#btn_updateUser").on("click", () => {
@@ -74,8 +67,6 @@ $(document).ready(function () {
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        // Observe state change events such as progress, pause, and resume
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log("Upload is " + progress + "% done");
@@ -88,13 +79,8 @@ $(document).ready(function () {
             break;
         }
       },
-      (error) => {
-        // Handle unsuccessful uploads
-      },
+      (error) => {},
       () => {
-        // Handle successful uploads on complete
-        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           updateInforUser(downloadURL);
         });
@@ -103,12 +89,11 @@ $(document).ready(function () {
   });
 });
 
+// lấy file hình ảnh đã chọn và render tạm thời lên giao diện
 function handleSelectImage(file) {
   const urlRenderTemporary = URL.createObjectURL(file);
-
-  $("#userAvatar").prop("src", urlRenderTemporary);
+  return urlRenderTemporary;
 }
-
 function updateInforUser(url) {
   const phoneNumber = $("#userInfo-update-about-phoneNumber").val();
   const fullName = $("#userInfo-update-about-fullName").val();
@@ -134,4 +119,100 @@ function updateInforUser(url) {
       console.log("Error: " + textStatus + errorThrown);
     },
   });
+}
+function handleSendMessageImage(filesArr) {
+  const file = filesArr[0];
+  const storageRef = ref(storage, file.name);
+  const uploadTask = uploadBytesResumable(storageRef, file);
+
+  uploadTask.on(
+    "state_changed",
+    (snapshot) => {
+      // Observe state change events such as progress, pause, and resume
+      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log("Upload is " + progress + "% done");
+      switch (snapshot.state) {
+        case "paused":
+          console.log("Upload is paused");
+          break;
+        case "running":
+          console.log("Upload is running");
+          break;
+      }
+    },
+    (error) => {
+      // Handle unsuccessful uploads
+    },
+    () => {
+      // Handle successful uploads on complete
+      // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+
+      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        sendMessage(
+          myMemberInConversationSelected,
+          "image",
+          downloadURL,
+          conversationSelected
+        );
+      });
+    }
+  );
+}
+function handleSendMessageListImage(listImage) {
+  (async () => {
+    for (let index = 0; index < listImage.length; index++) {
+      const storageRef = ref(storage, listImage[index].name);
+      const uploadTask = uploadBytesResumable(storageRef, listImage[index]);
+      await uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // Observe state change events such as progress, pause, and resume
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+          }
+        },
+        (error) => {
+          // Handle unsuccessful uploads
+        }
+
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+      );
+      await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        urlListImage += downloadURL;
+        if (index < listImage.length - 1) {
+          urlListImage += "+";
+        } else {
+          urlListImage += "";
+        }
+
+        console.log(urlListImage);
+      });
+      // getDownloadURL(storageRef).then((downloadURL) => {
+      //   urlListImage += downloadURL;
+      //   console.log(urlListImage);
+      // });
+    }
+  })();
+}
+function renderListEmoji(listEmoji) {
+  let emojiRender = "";
+  listEmoji.map((emoji) => {
+    emojiRender += `
+      <a class="dropdown-item"  style="cursor:pointer; padding:5px !important ; height:max-content; width:max-content;" onClick="appendEmoji('${emoji}')">
+        <span>${emoji}</span>  
+      </a>
+    `;
+  });
+  $("#emoji-list").append(emojiRender);
 }
