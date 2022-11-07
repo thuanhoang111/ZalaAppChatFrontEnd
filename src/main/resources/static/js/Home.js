@@ -43,6 +43,7 @@ $(document).ready(function () {
           });
           $(".userAvatar").prop("src", user.avatar);
           $("#userInfo-fullName").append(user.fullName);
+          $("#userName").append(user.fullName);
           $("#userInfo-about-fullName").append(user.fullName);
           $("#userInfo-about-phoneNumber").append(user.phoneNumber);
           $("#userInfo-update-fullName").append(user.fullName);
@@ -839,7 +840,75 @@ const connectToChat = async (conversation) => {
         
             </ul>
         </div>`;
-          } else {
+          }
+          else if (message.type === "listImage") {
+            let flexDirection = "";
+            let alignItem = "";
+            if (
+                message.sender === myMemberInConversationSelected.id
+            ) {
+                flexDirection = `flex-direction: row-reverse;`;
+                alignItem = "align-items: flex-end;";
+            }
+
+            const listImage = message.content.split("+");
+            console.log(listImage);
+            let listImageRender = "";
+
+            listImage.forEach((itemImage) => {
+                listImageRender += `<div>
+    <a class="popup-img d-inline-block m-1"
+        href="${itemImage}"
+        title="Project 1">
+        <img src="${itemImage}"
+            alt="" class="rounded border"
+            style="width:150px;height:100px">
+    </a>
+</div>`;
+            });
+            showContent += `<div class="ctext-wrap-content">
+                    <ul class="list-inline message-img  mb-0 " style="
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                    ${alignItem}
+                    ">
+                        <li class="list-inline-item message-img-list me-2 ms-0 "
+                            style="display: flex;flex-wrap: wrap;width:51%; ${flexDirection}">
+                              ${listImageRender}
+                        </li>
+
+                        <div class="message-img-link">
+                            <ul class="list-inline mb-0">
+                                <li class="list-inline-item">
+                                    <a href="#">
+                                        <i class="ri-download-2-line"></i>
+                                    </a>
+                                </li>
+                                <li class="list-inline-item dropdown">
+                                    <a class="dropdown-toggle" href="#" role="button"
+                                        data-bs-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">
+                                        <i class="ri-more-fill"></i>
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">Copy <i
+class="ri-file-copy-line float-end text-muted"></i></a>
+                                        <a class="dropdown-item" href="#">Save <i
+                                                class="ri-save-line float-end text-muted"></i></a>
+                                        <a class="dropdown-item" href="#">Forward <i
+                                                class="ri-chat-forward-line float-end text-muted"></i></a>
+                                        <a class="dropdown-item" href="#">Delete <i
+                                                class="ri-delete-bin-line float-end text-muted"></i></a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </ul>
+                </div>`;
+        }
+
+          else {
             showContent += `
             <div class="inline-block bg-gray-300 rounded-full p-2 px-6 text-gray-700">
             <span>${message.content}</span>
@@ -1090,6 +1159,7 @@ $(function () {
       userId: idUser,
       conversationId: conversationSelected.id,
     };
+
     console.log(data);
     $.ajax({
       url: `${api}/conversations/addMemberInGroup`,
@@ -1102,9 +1172,27 @@ $(function () {
         xhr.setRequestHeader("Content-Type", "application/json");
       },
       success: function (result) {
-        alert("Thành công");
-        window.location.reload();
+        console.log(result)
         //location.reload();
+
+        $.ajax({
+          url: `${api}/conversations/addConversationInUser`,
+          type: "POST",
+          data: JSON.stringify(data),
+          async: true,
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+            xhr.setRequestHeader("Accept", "application/json");
+            xhr.setRequestHeader("Content-Type", "application/json");
+          },
+          success: function (result1) {
+              console.log(result1)
+
+            alert("Thành công");
+            window.location.reload();
+            //location.reload();
+          },
+        });
       },
     });
   });
@@ -1136,6 +1224,10 @@ function getLeaveConversation() {
         conversationId: conversationSelected.id,
         memberId: name,
       };
+      let leaveConversationInUser={
+        userId: getUser,
+        conversationId: conversationSelected.id,
+      }
       console.log(body);
 
       $.ajax({
@@ -1149,8 +1241,23 @@ function getLeaveConversation() {
           xhr.setRequestHeader("Content-Type", "application/json");
         },
         success: function (result) {
-          alert("Rời nhóm thành công");
-          window.location.reload();
+          console.log(result);
+         
+          $.ajax({
+            url: `${api}/conversations/leaveConversationInUser`,
+            type: "POST",
+            data: JSON.stringify(leaveConversationInUser),
+            async: true,
+            beforeSend: function (xhr) {
+              xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+              xhr.setRequestHeader("Accept", "application/json");
+              xhr.setRequestHeader("Content-Type", "application/json");
+            },
+            success: function (result1) {
+              console.log(result1);
+              alert("Rời nhóm thành công");
+              window.location.reload();
+            }});
         },
       });
     },
@@ -1220,6 +1327,10 @@ function handleHideShowButtonAddFriend() {
           conversation.typeChat == false
             ? $("#addFriendGroup").css("display", "none")
             : $("#addFriendGroup").show();
+            conversation.typeChat == false
+            ? $("#leaveConversation").css("display", "none")
+            : $("#leaveConversation").show();
+           
         }
       });
     },

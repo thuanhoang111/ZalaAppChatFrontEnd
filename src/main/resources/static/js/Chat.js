@@ -31,6 +31,7 @@ function renderListImageTemporaryInScreen(arrayList) {
     viewImgTemporary += `
             <div class="position-relative">
                 <img class=" avatar-lg img-thumbnail"
+                style="border-radius: 30px;"
                     src="${handleSelectImage(arrayList[index])}"
                     alt="" srcset=""/>
 
