@@ -1523,10 +1523,10 @@
                     <!-- end chat conversation end -->
 
                     <!-- start chat input section -->
-                    <div class="chat-input-section p-3 p-lg-4 border-top mb-0 position-relative">
+                    <div class="chat-input-section p-3 p-lg-4 border-top mb-0 ">
 
                         <div class="d-flex position-absolute w-100" id="listImageSelectTemporary"
-                            style="background-color: #fff; top:-80px ">
+                            style="background-color: #fff; bottom:-80px ">
                         </div>
                         <div class="row g-0">
 
@@ -1744,6 +1744,14 @@
                                     <button id="leaveConversation" type="button" onclick="return getLeaveConversation();"
                                         class="btn btn-primary">Rời nhóm</button>
                                 </div>
+                                <div class="text-start ">
+                                    <button id="disbandingTheGroup" type="button" onclick="return disbandingtheGroup();"
+                                        class="btn btn-primary">Giản tán nhóm</button>
+                                </div>
+                                <div class="text-start ">
+                                    <button id="changeAdmin" type="button"
+                                        class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changeAdmin-exampleModal">Chuyển admin</button>
+                                </div>
                             </div>
                             <!-- <div class="accordion-item card border">
                                 <div class="accordion-header" id="attachfile3">
@@ -1914,6 +1922,71 @@
                 </div>
             </div>
             <!-- End User chat -->
+
+            <div class="modal fade" id="changeAdmin-exampleModal" tabindex="-1" role="dialog"
+                                aria-labelledby="addgroup-exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title font-size-16" id="addgroup-exampleModalLabel">Chuyển Admin</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close">
+                                            </button>
+                                        </div>
+                                        <div class="modal-body p-4">
+                                            <form>
+                                                <div class="mb-4">
+                                                    <label class="form-label">Group Members</label>
+                                                    <div class="mb-3">
+                                                        <button class="btn btn-light btn-sm" type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#groupmembercollapse" aria-expanded="false"
+                                                            aria-controls="groupmembercollapse">
+                                                            Select Members
+                                                        </button>
+                                                    </div>
+
+                                                    <div class="collapse" id="groupmembercollapse">
+                                                        <div class="card border">
+                                                            <div class="card-header">
+                                                                <h5 class="font-size-15 mb-0">Contacts</h5>
+                                                            </div>
+                                                            <div class="card-body p-2">
+                                                                <div data-simplebar style="max-height: 150px;">
+                                                                    <div>
+                                                                        <ul id="membersInGroupModalChangeAdmin"
+                                                                            class="list-unstyled contact-list">
+                                                                            <!-- <li>
+                                                                                <div class="form-check">
+                                                                                    <input type="radio" name="selectAdmin" value="1" class="form-check-input" id="memberCheck1">
+                                                                                    <label class="form-check-label" for="memberCheck1">Albert Rodarte</label>
+                                                                                </div>
+                                                                            </li>
+                                                                            <li>
+                                                                                <div class="form-check">
+                                                                                    <input type="radio" name="selectAdmin" value="2" class="form-check-input" id="memberCheck2">
+                                                                                    <label class="form-check-label" for="memberCheck1">Albert</label>
+                                                                                </div>
+                                                                            </li> -->
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-link"
+                                                data-bs-dismiss="modal">Close</button>
+                                            <button onclick="handleChangeAdmin()" id="btnCreateGroup" type="button"
+                                                class="btn btn-primary">Chuyển quyền admin</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
             <!-- audiocall Modal -->
             <div class="modal fade" id="audiocallModal" tabindex="-1" aria-hidden="true">
